@@ -16,7 +16,8 @@
 // @require      https://unpkg.com/selector-set@1.1.5/selector-set.js
 // @require      https://unpkg.com/selector-observer@2.1.6/dist/index.umd.js
 // @source       https://github.com/Explosion-Scratch/userscripts/blob/main/github_file_icons.user.js
-// @run-at       document-start
+// @updateURL    https://github.com/Explosion-Scratch/userscripts/raw/main/github_file_icons.user.js
+// @run-at       document-end
 // ==/UserScript==
 /*
 NOTE: Based on the Chrome Extension by @lvarayut, (https://github.com/lvarayut/github-file-icons)
