@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name         Material design icons (beta)
+// @name         Material design icons
 // @namespace    mailto:explosionscratch@gmail.com
 // @version      0.1
 // @description  Adds file Icons to GitHub
 // @author       Explosion-Scratch
 // @match        *://github.com/*
-// @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
+// @icon         https://icons.duckduckgo.com/ip2/github.com.ico
 // @grant        GM_getResourceText
 // @resource     language_map https://gist.githubusercontent.com/Explosion-Scratch/ee1b9316ddb9389959697a00304bc57b/raw/4038781f76d14557d36e3ff2996a847437dc574e/map.json
 // @require      https://unpkg.com/selector-set@1.1.5/selector-set.js
@@ -19,17 +19,28 @@
     SelectorObserver.observe('.js-navigation-container > .js-navigation-item', {
         add: icons
     });
-
     function icons(item) {
         let map = JSON.parse(GM_getResourceText("language_map"));
         console.log(map);
         //Item is '.js-navigation-container > .js-navigation-item' that changed
         const isFile = item.querySelector('.octicon-file');
-        const name = item.querySelector('.js-navigation-open').textContent;
-        const ext = name.split(".").slice(-1)[0];
+        let name = item.querySelector('.js-navigation-open').textContent;
+        name = name.split("/").slice(-1)[0];//For nested folders
+        let ext = name.split(".").slice(1).join(".");//For stuff with dual extensions, like .d.ts
         let icon = map.icons.find(i => i.fileNames?.includes(name)) || map.moreExtensions.fileNames[name] ||
               map.icons.find(i => i.fileExtensions?.includes(ext)) ||
               map.icons.find(i => i.name === ext) || map.moreExtensions.fileExtensions[ext] || map.defaultIcon;
+        //We want .user.js and some things to fallback to .js
+        if (icon.name === "file" && ext.split(".").length > 1){
+          ext = ext.split(".").slice(-1)[0];
+          icon = map.icons.find(i => i.fileNames?.includes(name)) || map.moreExtensions.fileNames[name] ||
+              map.icons.find(i => i.fileExtensions?.includes(ext)) ||
+              map.icons.find(i => i.name === ext) || map.moreExtensions.fileExtensions[ext] || map.defaultIcon;
+        }
+        console.debug({icon, ext, name, isFile});
+        if (isFile && ext === "ts"){
+              icon = {name: "typescript"};
+        }
         if (typeof icon === "string"){
              icon = map.icons.find(i => i.name === icon);
         }
