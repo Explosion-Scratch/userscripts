@@ -4,7 +4,7 @@
 // @version      0.1
 // @description  Adds file Icons to GitHub
 // @author       Explosion-Scratch
-// @match        *://github.com/*
+// @match        *://github.com/*/*
 // @icon         https://icons.duckduckgo.com/ip2/github.com.ico
 // @grant        GM_getResourceText
 // @resource     language_map https://gist.githubusercontent.com/Explosion-Scratch/ee1b9316ddb9389959697a00304bc57b/raw/4038781f76d14557d36e3ff2996a847437dc574e/map.json

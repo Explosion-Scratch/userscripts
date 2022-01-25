@@ -4,7 +4,7 @@
 // @version      0.1
 // @description  Adds file Icons to GitHub
 // @author       Explosion-Scratch
-// @match        *://github.com/*
+// @match        *://github.com/*/*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @resource     style https://raw.githubusercontent.com/lvarayut/github-file-icons/master/vendors/file-icons-js/css/style.css
 // @grant        GM_getResourceText
