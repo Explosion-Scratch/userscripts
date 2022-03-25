@@ -17,9 +17,9 @@ const DEV_OR_PROD = "prod";
 let RUNNING = false;
 const tryToAddButton = () => {
     document.querySelector("#CDN_LINK_COPY")?.remove();
-    if (/^https?\:\/\/*\.?github.com\/[a-z0-9-]+\/[a-z0-9-]+\/blob\/(?:[a-z0-9-]+\/)+[a-z0-9-\.]+$/gi.test(location.href)){
+    if (/^https?\:\/\/*\.?github.com\/\S+\/\S+\/blob\/(?:\S+\/)+\S+$/gi.test(location.href)){
         main();
-    }
+    } else {console.log("Location doesn't match")}
 };
 tryToAddButton();
 (async () => {
