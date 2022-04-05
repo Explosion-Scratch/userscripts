@@ -39,7 +39,7 @@
                 toast("Copied URL");
                 return;
             }
-            if (e.key === " " && mouse.target.closest("a")){
+            if (e.key === "Enter" && mouse.target.closest("a")){
                 toast("Opening");
                 window.open(strip(mouse.target.closest("a").href, TRACKING_PARAMS), "copytab");
                 e.preventDefault();
