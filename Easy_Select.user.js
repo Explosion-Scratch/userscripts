@@ -15,6 +15,7 @@
 (async () => {
 	"use strict";
 	const NOT_ALLOWED = `input, textarea, [contenteditable], #editor, #codeflask, .view-line, .monaco-editor, .codeflask, [class*=codeflask__]`;
+    const TRACKING_PARAMS = `stm, ns, sc, utm, fb, ga, id, gs, hmb, wt, ref`.split(", ");
 	let keys = {};
 	window.onblur = (e) => (console.log("Window unfocused"), (keys = {}));
 	let mouse = { x: 0, y: 0, target: document.body };
@@ -31,9 +32,32 @@
 		}
 		if (
 			!e.target.closest(NOT_ALLOWED) &&
-			!document.activeElement.closest(NOT_ALLOWED) &&
-			window.getSelection().toString()?.length
+			!document.activeElement.closest(NOT_ALLOWED)
 		) {
+            if (e.key.toLowerCase() === "h" && mouse.target.closest("a")){
+                navigator.clipboard.writeText(mouse.target.closest("a").href);
+                toast("Copied URL");
+                return;
+            }
+            if (e.key === " " && mouse.target.closest("a")){
+                toast("Opening");
+                window.open(strip(mouse.target.closest("a").href, TRACKING_PARAMS), "copytab");
+                e.preventDefault();
+                //Remove tracking, you're welcome
+                function strip(url, params){
+                    let u = new URL(url);
+                    let spo = new URLSearchParams(u.search);
+                    let sp = spo.entries()
+                    for (let [k, v] of sp){
+                        if (params.find(i => k.includes(i))){
+                            spo.delete(k);
+                        }
+                    }
+                    u.search = spo;
+                    return u.toString();
+                }
+            }
+            if (!window.getSelection().toString()?.length && ["g", "t"].includes(e.key)){return}
 			if (e.key.toLowerCase() === "g") {
 				toast("Opening google");
 				window.open(
@@ -64,7 +88,7 @@
 			if (mouse.target.closest("img")) {
 				(async () => {
 					let src = mouse.target.closest("img").src;
-					let blob = await fetch(src).then((r) => r.blob());
+					let blob = await getBlob(src);
 					navigator.clipboard
 						.write([
 							new ClipboardItem({
@@ -145,6 +169,14 @@
 						);
 				})();
 			}
+            async function getBlob(url, retried = false){
+               if (retried){return fetch(url).then(r => r.blob())}
+               try {
+                  return await fetch(url).then(r => r.blob());
+               } catch(e){
+                   return await fetch(`https://cors.explosionscratc.repl.co/${url.split("//")[1]}`).then(r => r.blob());
+               }
+            }
 			function toBlob(dataurl) {
 				var arr = dataurl.split(","),
 					mime = arr[0].match(/:(.*?);/)[1],
@@ -313,7 +345,7 @@
 			this.imgPreview.src = input;
 		}
 	}
-	function toast(text, timeout = 3000) {
+	function toast(text, timeout = 1500) {
 		let t = document.createElement("div");
 		document.querySelector("#copy_toast")?.remove();
 		t.id = "copy_toast";
